@@ -1,0 +1,180 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JavaScript Image Carousel</title>
+
+  <style>
+
+    .carousel {
+      width: 90%;
+      max-width: 700px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px #0003;
+    }
+
+    .slides {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+    }
+
+    .slide {
+      min-width: 100%;
+      height: 400px;
+    }
+
+    .slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #0009;
+      color: white;
+      border: none;
+      padding: 12px 16px;
+      cursor: pointer;
+      font-size: 20px;
+      border-radius: 50%;
+    }
+
+    button:hover {
+      background: #000;
+    }
+
+    .prev {
+      left: 15px;
+    }
+
+    .next {
+      right: 15px;
+    }
+
+    .dots {
+      position: absolute;
+      bottom: 15px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: white;
+      opacity: 0.5;
+      cursor: pointer;
+      padding: 0;
+      position: static;
+      transform: none;
+    }
+
+    .dot.active {
+      opacity: 1;
+      background: #007bff;
+    }
+
+    @media (max-width: 600px) {
+      .slide {
+        height: 250px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="carousel">
+    <div class="slides">
+      <div class="slide">
+        <img src="https://picsum.photos/id/1015/700/400" alt="Mountain">
+      </div>
+
+      <div class="slide">
+        <img src="https://picsum.photos/id/1018/700/400" alt="Nature">
+      </div>
+
+      <div class="slide">
+        <img src="https://picsum.photos/id/1019/700/400" alt="Landscape">
+      </div>
+    </div>
+
+    <button class="prev" onclick="prevSlide()">&#10094;</button>
+    <button class="next" onclick="nextSlide()">&#10095;</button>
+
+    <div class="dots"></div>
+  </div>
+
+  <script>
+    const slides = document.querySelector(".slides");
+    const totalSlides = document.querySelectorAll(".slide").length;
+    const dotsContainer = document.querySelector(".dots");
+
+    let currentIndex = 0;
+    let autoSlide;
+
+    // Create navigation dots
+    for (let i = 0; i < totalSlides; i++) {
+      const dot = document.createElement("button");
+      dot.classList.add("dot");
+
+      dot.addEventListener("click", () => {
+        currentIndex = i;
+        updateCarousel();
+        resetAutoSlide();
+      });
+
+      dotsContainer.appendChild(dot);
+    }
+
+    const dots = document.querySelectorAll(".dot");
+
+    function updateCarousel() {
+      slides.style.transform =
+        `translateX(-${currentIndex * 100}%)`;
+
+      dots.forEach((dot, index) => {
+        dot.classList.toggle(
+          "active",
+          index === currentIndex
+        );
+      });
+    }
+
+    function nextSlide() {
+      currentIndex = (currentIndex + 1) % totalSlides;
+      updateCarousel();
+    }
+
+    function prevSlide() {
+      currentIndex =
+        (currentIndex - 1 + totalSlides) % totalSlides;
+      updateCarousel();
+    }
+
+    function startAutoSlide() {
+      autoSlide = setInterval(nextSlide, 3000);
+    }
+
+    function resetAutoSlide() {
+      clearInterval(autoSlide);
+      startAutoSlide();
+    }
+
+    updateCarousel();
+    startAutoSlide();
+  </script>
+
+</body>
+</html>
